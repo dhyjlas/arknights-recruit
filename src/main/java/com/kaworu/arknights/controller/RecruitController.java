@@ -1,5 +1,6 @@
 package com.kaworu.arknights.controller;
 
+import com.kaworu.arknights.cache.CombCache;
 import com.kaworu.arknights.cache.PlayerCache;
 import com.kaworu.arknights.model.Comb;
 import com.kaworu.arknights.model.Player;
@@ -50,11 +51,16 @@ public class RecruitController {
         List<String> sexTagList = StringUtils.isEmpty(sexTags) ? new ArrayList<>() : new ArrayList<>(Arrays.asList((sexTags).split(",")));
         sexTagList.add("");
         List<String> tagList = StringUtils.isEmpty(tags) ? new ArrayList<>() : Arrays.asList((tags).split(","));
-        List<Comb> combList = recruitService.combination(occupationTagList, sexTagList, tagList);
+//        List<Comb> combList = recruitService.combination(occupationTagList, sexTagList, tagList);
+        List<Comb> combList = CombCache.INSTANCE.find(occupationTagList, sexTagList, tagList);
 
         return Mono.just(combList);
     }
 
+    /**
+     * 重新获取数据，同时清除缓存
+     * @return
+     */
     @GetMapping("/crawl")
     public Mono<String> crawl(){
         if(!crawl){
@@ -63,6 +69,7 @@ public class RecruitController {
 
         try {
             recruitService.crawl();
+            CombCache.INSTANCE.clear();
             return Mono.just("数据已爬取");
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,9 +77,14 @@ public class RecruitController {
         }
     }
 
+    /**
+     * 刷新
+     * @return
+     */
     @GetMapping("/refresh")
     public Mono<String> refresh(){
         PlayerCache.INSTANCE.refresh();
+        CombCache.INSTANCE.clear();
         return Mono.just("干员数据已重新加载");
     }
 }
