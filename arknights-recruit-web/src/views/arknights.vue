@@ -5,7 +5,7 @@
             <p>以下所有可能招募的结果均建立在招募时间9小时且不被划去标签的情况下</p>
             <p>干员数据来自<a href="http://wiki.joyme.com/arknights" target="_blank">明日方舟wiki</a>，分析结果仅供参考</p>
             <p>如发现错误或有改进建议，可联系邮箱：dhyjlas@163.com</p>
-            <p>项目开源地址：<a href="https://github.com/dhyjlas/arknights-recruit" target="_blank">https://github.com/dhyjlas/arknights-recruit</a></p>
+            <p style="margin-bottom: 14px">项目开源地址：<a href="https://github.com/dhyjlas/arknights-recruit" target="_blank">https://github.com/dhyjlas/arknights-recruit</a></p>
         </Card>
 		<Form style="margin-top: 20px" :label-width="60">
         <Card :dis-hover="true" >
@@ -32,7 +32,7 @@
                 </ButtonGroup>
 			</FormItem>
             </div>
-			<Button type="primary" @click="handleSubmit()" :loading="loading" long>点击获取分析结果</Button>
+			<!-- <Button type="primary" @click="handleSubmit()" :loading="loading" long>点击获取分析结果</Button> -->
         </Card>
 		</Form>
         <Collapse style="margin-top: 20px" v-if="isBegin">
@@ -51,7 +51,7 @@
 	export default {
 		data() {
 			return {
-                loading: false,
+                timestamp: '',
                 isBegin: false,
 				player: {
 					occupation: {},
@@ -112,7 +112,8 @@
                                     },
                                 }),
                             ]);
-                        }
+                        },
+                        width: 50
 					},{
 						title: '姓名',
 						key: 'name',
@@ -130,23 +131,28 @@
                                     }
                                 }, params.row.name)
                             ]);
-                        }
+                        },
+                        width: 100
 					},
 					{
 						title: '职业',
 						key: 'occupation',
+                        width: 60
                     },
 					{
 						title: '星级',
 						key: 'level',
+                        width: 36
                     },
 					{
 						title: '性别',
 						key: 'sex',
+                        width: 36
                     },
 					{
 						title: '标签',
 						key: 'tag',
+                        minWidth: 150
                     },
                 ],
                 combs: [],
@@ -163,12 +169,14 @@
                         this.isChoice1[e] = 'error';
                         this.number ++;
                     }else{
-					    this.$Message.error("最多选择6项Tag")
+                        this.$Message.error("最多选择6项Tag");
+                        return ;
                     }
                 }else{
                     this.isChoice1[e] = 'default';
                     this.number --;
                 }
+                this.handleSubmit();
             },
             choice2(e){
                 if(this.isChoice2[e] == 'default'){
@@ -176,12 +184,14 @@
                         this.isChoice2[e] = 'error';
                         this.number ++;
                     }else{
-					    this.$Message.error("最多选择6项Tag")
+					    this.$Message.error("最多选择6项Tag");
+                        return ;
                     }
                 }else{
                     this.isChoice2[e] = 'default';
                     this.number --;
                 }
+                this.handleSubmit();
             },
             choice3(e){
                 if(this.isChoice3[e] == 'default'){
@@ -189,15 +199,18 @@
                         this.isChoice3[e] = 'error';
                         this.number ++;
                     }else{
-                        this.$Message.error("最多选择6项Tag")
+                        this.$Message.error("最多选择6项Tag");
+                        return ;
                     }
                 }else{
                     this.isChoice3[e] = 'default';
                     this.number --;
                 }
+                this.handleSubmit();
             },
 			handleSubmit() {
-                this.loading = true;
+                const time = (new Date()).getTime();
+                this.timestamp = time;
                 const occupationTags = [];
                 const sexTags = []
                 const tags = []
@@ -225,23 +238,24 @@
                         tags: tags.join(',')
                     }
                 }).then(response => {
-                    this.combs = [];
-                    this.panelList = [];
-                    response.data.forEach((item, index) => {
-                        const comb = {};
-                        const tags = item.tags;
-                        if(item.sexTag != ''){
-                            tags.unshift(item.sexTag)
-                        }
-                        if(item.occupationTag != ''){
-                            tags.unshift(item.occupationTag);
-                        }
-                        comb.title = '保底' + item.floors + '星 [' + item.levels[2] + '|' + item.levels[3] + '|'  + item.levels[4] + '|' + item.levels[5] + ']' + '   TAG：' + tags.join('、');
-                        comb.data = item.playerList;
-                        this.combs.push(comb);
-                    });
-                    this.isBegin = true;
-                    this.loading = false;
+                    if(this.timestamp == time){
+                        this.combs = [];
+                        this.panelList = [];
+                        response.data.forEach((item, index) => {
+                            const comb = {};
+                            const tags = item.tags;
+                            if(item.sexTag != ''){
+                                tags.unshift(item.sexTag)
+                            }
+                            if(item.occupationTag != ''){
+                                tags.unshift(item.occupationTag);
+                            }
+                            comb.title = '保底' + item.floors + '星 [' + item.levels[2] + '|' + item.levels[3] + '|'  + item.levels[4] + '|' + item.levels[5] + ']' + '   TAG：' + tags.join('、');
+                            comb.data = item.playerList;
+                            this.combs.push(comb);
+                        });
+                        this.isBegin = true;
+                    }
                 })
             },
             go(e){
@@ -269,5 +283,12 @@
 }
 .ivu-btn-group>.ivu-btn {
     border-radius: 0px;
+}
+.ivu-card-body {
+    padding-bottom: 2px;
+}
+.ivu-table-cell {
+    padding-left: 2px;
+    padding-right: 2px;
 }
 </style>

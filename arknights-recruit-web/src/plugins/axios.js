@@ -9,7 +9,7 @@ import axios from "axios";
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-	baseURL: process.env.NODE_ENV == "development" ? "http://192.168.1.137:8080" : "http://192.168.1.137:8080",
+	baseURL: process.env.NODE_ENV == "development" ? "http://192.168.1.137:8080" : "http://www.dhyjl.com:8081",
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };
