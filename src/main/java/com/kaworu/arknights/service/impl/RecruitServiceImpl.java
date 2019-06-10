@@ -29,7 +29,7 @@ public class RecruitServiceImpl implements RecruitService{
     private RecruitService recruitService;
 
     @Override
-    @Cacheable(value="player", key="1")
+    @Cacheable(value="player")
     public List<Player> list(){
         List<Player> playerList = playerRepository.findByAccessLike("%公开招募%");
         for(Player player : playerList){
