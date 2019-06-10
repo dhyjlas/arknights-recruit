@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 已使用caffeine作为代替方案
+ */
+@Deprecated
 public enum PlayerCache {
     INSTANCE;
 

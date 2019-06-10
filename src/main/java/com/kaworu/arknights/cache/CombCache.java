@@ -7,6 +7,10 @@ import com.kaworu.arknights.utils.SpringUtil;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 已使用caffeine作为代替方案
+ */
+@Deprecated
 public enum CombCache {
     INSTANCE;
 
