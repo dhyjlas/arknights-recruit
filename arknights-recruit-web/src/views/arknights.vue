@@ -31,11 +31,14 @@
                     </template>
                 </ButtonGroup>
 			</FormItem>
+            <FormItem>
+                <Button type="primary" class="btn-clear" @click="clear()">清空标签</Button>
+            </FormItem>
             </div>
 			<!-- <Button type="primary" @click="handleSubmit()" :loading="loading" long>点击获取分析结果</Button> -->
         </Card>
 		</Form>
-        <Collapse style="margin-top: 20px" v-if="isBegin">
+        <Collapse style="margin-top: 20px" v-if="isBegin" v-model="colopen">
             <template v-for="comb in combs">
                 <Panel>
                     {{comb.title}}
@@ -51,8 +54,10 @@
 	export default {
 		data() {
 			return {
-                timestamp: '',
+                colopen: [],
+                isSubmit: false,
                 isBegin: false,
+                timestamp: '',
 				player: {
 					occupation: {},
                     sex: {},
@@ -157,12 +162,64 @@
                 ],
                 combs: [],
                 number: 0,
-                panelList: []
+                panelList: [],
+                timer: null
 			}
 		},
 		mounted() {
 		},
+        created (){
+            this.timer = setInterval(this.submit, 500);
+        },
+        beforeDestroy(){
+            if(this.timer){
+                clearInterval(this.timer);
+            }
+        },
 		methods: {
+            clear(){
+                const time = (new Date()).getTime();
+                this.timestamp = time;
+                this.isChoice1 = {
+                    '狙击': 'default',
+                    '术师': 'default',
+                    '先锋': 'default',
+                    '近卫': 'default',
+                    '重装': 'default',
+                    '医疗': 'default',
+                    '辅助': 'default',
+                    '特种': 'default',
+                };
+                this.isChoice2 = {
+                    '男': 'default',
+                    '女': 'default',
+                };
+                this.isChoice3 = {
+                    '近战位': 'default',
+                    '远程位': 'default',
+                    '输出': 'default',
+                    '防护': 'default',
+                    '生存': 'default',
+                    '治疗': 'default',
+                    '支援': 'default',
+                    '费用回复': 'default',
+                    '快速复活': 'default',
+                    '群攻': 'default',
+                    '召唤': 'default',
+                    '削弱': 'default',
+                    '减速': 'default',
+                    '控场': 'default',
+                    '位移': 'default',
+                    '爆发': 'default',
+                    '新手': 'default',
+                    '资深干员': 'default',
+                    '高级资深干员': 'default'
+                };
+                this.number = 0;
+                this.combs = [];
+                this.isBegin = false;
+
+            },
             choice1(e){
                 if(this.isChoice1[e] == 'default'){
                     if(this.number < 6){
@@ -176,7 +233,7 @@
                     this.isChoice1[e] = 'default';
                     this.number --;
                 }
-                this.handleSubmit();
+                this.isSubmit = true;
             },
             choice2(e){
                 if(this.isChoice2[e] == 'default'){
@@ -191,7 +248,7 @@
                     this.isChoice2[e] = 'default';
                     this.number --;
                 }
-                this.handleSubmit();
+                this.isSubmit = true;
             },
             choice3(e){
                 if(this.isChoice3[e] == 'default'){
@@ -206,7 +263,14 @@
                     this.isChoice3[e] = 'default';
                     this.number --;
                 }
-                this.handleSubmit();
+                this.isSubmit = true;
+            },
+            submit(){
+                if(this.isSubmit){
+                    this.handleSubmit();
+                    this.isSubmit = false;
+                    this.colopen = [];
+                }
             },
 			handleSubmit() {
                 const time = (new Date()).getTime();
@@ -290,5 +354,8 @@
 .ivu-table-cell {
     padding-left: 2px;
     padding-right: 2px;
+}
+.btn-clear {
+    border-radius: 0;
 }
 </style>
