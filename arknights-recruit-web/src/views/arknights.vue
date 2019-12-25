@@ -17,13 +17,13 @@
                     </template>
                 </ButtonGroup>
 			</FormItem>
-			<FormItem label="干员性别" prop="sex">
+			<!-- <FormItem label="干员性别" prop="sex">
                 <ButtonGroup size="default">
                     <template v-for="sex in sexs">
                         <Button :id="sex" :type="isChoice2[sex]" @click="choice2(sex)">{{sex}}</Button>
                     </template>
                 </ButtonGroup>
-			</FormItem>
+			</FormItem> -->
 			<FormItem label="干员标签" prop="tag">
                 <ButtonGroup size="default">
                     <template v-for="tag in tags">
@@ -65,7 +65,7 @@
                 },
                 occupations: ['狙击','术师','先锋','近卫','重装','医疗','辅助','特种'],
                 sexs: ['男', '女'],
-                tags: ['近战位','远程位','输出','防护','生存','治疗','支援','费用回复','快速复活','群攻','召唤','削弱','减速','控场','位移','爆发','新手','资深干员','高级资深干员'],
+                tags: ['近战位','远程位','输出','防护','生存','治疗','支援','费用回复','快速复活','群攻','召唤','削弱','减速','控场','位移','爆发','新手','支援机械','资深干员','高级资深干员'],
                 isChoice1: {
                     '狙击': 'default',
                     '术师': 'default',
@@ -98,6 +98,7 @@
                     '位移': 'default',
                     '爆发': 'default',
                     '新手': 'default',
+                    '支援机械': "default",
                     '资深干员': 'default',
                     '高级资深干员': 'default'
                 },
